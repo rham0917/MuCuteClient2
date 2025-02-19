@@ -23,10 +23,10 @@ object TranslationManager {
         put("slow_falling", "Slow Falling")
         put("anti_knockback", "Velocity")
         put("poseidon", "Poseidon")
-        put("regeneration", "regen")
+        put("regeneration", "Regen")
         put("bhop", "BHOP")
         put("sprint", "Sprint")
-        put("no_hurt_camera", "No Hurt Camera")
+        put("no_hurt_camera", "No Hurt Cam")
         put("anti_afk", "Anti AFK")
         put("auto_walk", "Auto Walk")
         put("desync", "Desync")
@@ -62,7 +62,7 @@ object TranslationManager {
         put("blindness", "Blindness")
         put("hunger", "Hunger")
         put("time_shift", "Time Changer")
-        put("weather_controller", "Weather Controller")
+        put("weather_controller", "Weather Control")
         put("crash", "Crash")
 
 

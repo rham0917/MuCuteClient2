@@ -3,6 +3,7 @@ package com.mucheng.mucute.client.overlay
 import android.content.res.Configuration
 import android.view.WindowManager
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -28,7 +30,6 @@ class OverlayShortcutButton(
 
     private val _layoutParams by lazy {
         super.layoutParams.apply {
-
             layoutInDisplayCutoutMode =
                 WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
 
@@ -69,6 +70,11 @@ class OverlayShortcutButton(
             shape = CircleShape,
             modifier = Modifier
                 .padding(5.dp)
+                .border(
+                    width = if (module.isEnabled) 2.dp else 0.dp, // Show border only when enabled
+                    color = if (module.isEnabled) Color.Cyan else Color.Transparent, // Cyan border when enabled
+                    shape = CircleShape
+                )
                 .pointerInput(Unit) {
                     detectDragGestures { _, dragAmount ->
                         _layoutParams.x += (dragAmount.x).toInt()
@@ -94,5 +100,4 @@ class OverlayShortcutButton(
         module.shortcutX = _layoutParams.x
         module.shortcutY = _layoutParams.y
     }
-
 }
