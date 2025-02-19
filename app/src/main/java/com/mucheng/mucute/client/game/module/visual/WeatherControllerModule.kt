@@ -1,4 +1,4 @@
-package com.mucheng.mucute.client.game.module.misc
+package com.mucheng.mucute.client.game.module.visual
 
 import com.mucheng.mucute.client.game.InterceptablePacket
 import com.mucheng.mucute.client.game.Module

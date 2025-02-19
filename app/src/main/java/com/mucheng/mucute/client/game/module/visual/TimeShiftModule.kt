@@ -1,4 +1,4 @@
-package com.mucheng.mucute.client.game.module.misc
+package com.mucheng.mucute.client.game.module.visual
 
 import com.mucheng.mucute.client.game.InterceptablePacket
 import com.mucheng.mucute.client.game.Module
@@ -6,7 +6,7 @@ import com.mucheng.mucute.client.game.ModuleCategory
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket
 import org.cloudburstmc.protocol.bedrock.packet.SetTimePacket
 
-class TimeShiftModule : Module("time_shift", ModuleCategory.Misc) {
+class TimeShiftModule : Module("time_shift", ModuleCategory.Visual) {
 
     private val time by intValue("time", 6000, 0..24000)
     private var lastTimeUpdate = 0L

@@ -37,8 +37,8 @@ import com.mucheng.mucute.client.game.module.misc.DesyncModule
 import com.mucheng.mucute.client.game.module.misc.NoClipModule
 import com.mucheng.mucute.client.game.module.misc.PlayerTracerModule
 import com.mucheng.mucute.client.game.module.misc.PositionLoggerModule
-import com.mucheng.mucute.client.game.module.misc.TimeShiftModule
-import com.mucheng.mucute.client.game.module.misc.WeatherControllerModule
+import com.mucheng.mucute.client.game.module.visual.TimeShiftModule
+import com.mucheng.mucute.client.game.module.visual.WeatherControllerModule
 import com.mucheng.mucute.client.game.module.motion.AirJumpModule
 import com.mucheng.mucute.client.game.module.motion.AntiAFKModule
 import com.mucheng.mucute.client.game.module.motion.AutoWalkModule
