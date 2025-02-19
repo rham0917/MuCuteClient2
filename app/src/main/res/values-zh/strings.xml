@@ -34,8 +34,6 @@
     <string name="has_been_selected">（已选择）</string>
     <string name="about">关于</string>
     <string name="settings">设置</string>
-    <string name="header_introduction">欢迎加入我们的 Discord 社区：discord.gg/mucute</string>
-    <string name="copyright">©2024-2025 MuCuteTeam 版权所有</string>
     <string name="how_do_i_switch_login_mode">如何切换登录模式？</string>
     <string name="login_mode_introduction">如果你想要以在线模式登录，请添加账户并选择。如果你想要以离线模式登录，请取消选择账户。</string>
     <string name="combat">战斗</string>
