@@ -64,7 +64,7 @@ object TranslationManager {
         put("time_shift", "Time Changer")
         put("weather_controller", "Weather Control")
         put("crash", "Crash")
-
+        put("fake_death", "FakeDeath")
 
         // Below for module options
         put("times", "Times")
@@ -101,6 +101,8 @@ object TranslationManager {
         put("thunderstorm", "Thunderstorm")
         put("intensity", "Intensity")
         put("interval", "Interval")
+        put("walk_speed", "Walk Speed")
+        put("fall_speed", "Fall Speed")
     }
 
     private fun zh() = buildMap {
