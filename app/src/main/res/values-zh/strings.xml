@@ -39,6 +39,7 @@
     <string name="combat">战斗</string>
     <string name="motion">运动</string>
     <string name="visual">视觉</string>
+    <string name="particle">粒子</string>
     <string name="misc">杂项</string>
     <string name="config">配置</string>
     <string name="request_ignore_battery_optimization">我们需要忽略电池优化以保持连接</string>

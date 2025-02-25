@@ -25,6 +25,10 @@ enum class ModuleCategory(
         iconResId = R.drawable.masked_transitions_24px,
         labelResId = R.string.effect
     ),
+    Particle(
+        iconResId = R.drawable.particles_24px,
+        labelResId = R.string.particle
+    ),
     Misc(
         iconResId = R.drawable.toc_24px,
         labelResId = R.string.misc
