@@ -67,6 +67,8 @@ object TranslationManager {
         put("fake_death", "FakeDeath")
         put("explosion_particle", "Explosion")
         put("bubble_particle", "Bubble")
+        put("heart_particle", "Heart")
+        put("xp_levels", "FakeXP")
 
         // Below for module options
         put("times", "Times")
@@ -110,6 +112,7 @@ object TranslationManager {
         put("random_offset", "Random Offset")
         put("offset_radius", "Offset Radius")
         put("height_offset", "Height Offset")
+        put("levels", "Levels")
     }
 
     private fun zh() = buildMap {

@@ -35,6 +35,7 @@ import com.mucheng.mucute.client.game.module.effect.WeaknessModule
 import com.mucheng.mucute.client.game.module.effect.WitherModule
 import com.mucheng.mucute.client.game.module.misc.DesyncModule
 import com.mucheng.mucute.client.game.module.misc.FakeDeathModule
+import com.mucheng.mucute.client.game.module.misc.FakeXPModule
 import com.mucheng.mucute.client.game.module.misc.NoClipModule
 import com.mucheng.mucute.client.game.module.misc.PositionLoggerModule
 import com.mucheng.mucute.client.game.module.visual.TimeShiftModule
@@ -51,6 +52,7 @@ import com.mucheng.mucute.client.game.module.motion.SpeedModule
 import com.mucheng.mucute.client.game.module.motion.SprintModule
 import com.mucheng.mucute.client.game.module.particle.BubbleParticleModule
 import com.mucheng.mucute.client.game.module.particle.ExplosionParticleModule
+import com.mucheng.mucute.client.game.module.particle.HeartParticleModule
 import com.mucheng.mucute.client.game.module.visual.FreeCameraModule
 import com.mucheng.mucute.client.game.module.visual.NoHurtCameraModule
 import com.mucheng.mucute.client.game.module.visual.ZoomModule
@@ -124,6 +126,8 @@ object ModuleManager {
             add(FakeDeathModule())
             add(ExplosionParticleModule())
             add(BubbleParticleModule())
+            add(HeartParticleModule())
+            add(FakeXPModule())
         }
     }
 

@@ -120,4 +120,24 @@ object OverlayManager {
         }
     }
 
+    fun updateOverlayOpacity(opacity: Float) {
+        overlayWindows.find { it is OverlayButton }?.let { button ->
+            button.layoutParams.alpha = opacity
+            currentContext?.let { context ->
+                (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+                    .updateViewLayout(button.composeView, button.layoutParams)
+            }
+        }
+    }
+
+    fun updateShortcutOpacity(opacity: Float) {
+        overlayWindows.filter { it is OverlayShortcutButton }.forEach { button ->
+            button.layoutParams.alpha = opacity
+            currentContext?.let { context ->
+                (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+                    .updateViewLayout(button.composeView, button.layoutParams)
+            }
+        }
+    }
+
 }
