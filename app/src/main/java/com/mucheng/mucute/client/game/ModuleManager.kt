@@ -51,7 +51,10 @@ import com.mucheng.mucute.client.game.module.motion.MotionFlyModule
 import com.mucheng.mucute.client.game.module.motion.SpeedModule
 import com.mucheng.mucute.client.game.module.motion.SprintModule
 import com.mucheng.mucute.client.game.module.particle.BubbleParticleModule
+import com.mucheng.mucute.client.game.module.particle.DustParticleModule
 import com.mucheng.mucute.client.game.module.particle.ExplosionParticleModule
+import com.mucheng.mucute.client.game.module.particle.EyeOfEnderDeathParticleModule
+import com.mucheng.mucute.client.game.module.particle.FizzParticleModule
 import com.mucheng.mucute.client.game.module.particle.HeartParticleModule
 import com.mucheng.mucute.client.game.module.visual.FreeCameraModule
 import com.mucheng.mucute.client.game.module.visual.NoHurtCameraModule
@@ -128,6 +131,9 @@ object ModuleManager {
             add(BubbleParticleModule())
             add(HeartParticleModule())
             add(FakeXPModule())
+            add(DustParticleModule())
+            add(EyeOfEnderDeathParticleModule())
+            add(FizzParticleModule())
         }
     }
 

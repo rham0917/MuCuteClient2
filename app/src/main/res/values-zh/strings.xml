@@ -49,6 +49,7 @@
     <string name="request_ignore_battery_optimization">我们需要忽略电池优化以保持连接</string>
     <string name="ignore_battery_optimization_denied">忽略电池优化权限被拒绝</string>
     <string name="shortcut">快捷方式</string>
+    <string name="check_updates_and_news">查看更新和新闻</string>
     <string name="crash_happened">发生崩溃</string>
     <string name="cannot_back">崩溃已发生不允许返回，你只能重启应用</string>
     <string name="effect">效果</string>

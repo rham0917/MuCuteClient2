@@ -69,6 +69,9 @@ object TranslationManager {
         put("bubble_particle", "Bubble")
         put("heart_particle", "Heart")
         put("xp_levels", "FakeXP")
+        put("dust_particle", "Dust")
+        put("fizz_particle", "Fizz")
+        put("ender_eye_particle", "Ender Eye")
 
         // Below for module options
         put("times", "Times")

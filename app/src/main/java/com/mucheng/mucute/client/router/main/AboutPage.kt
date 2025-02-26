@@ -1,34 +1,20 @@
 package com.mucheng.mucute.client.router.main
 
 import android.content.Intent
-import androidx.compose.material3.Icon
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.OpenInNew
 import android.net.Uri
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.platform.LocalContext
+import android.util.Base64
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.contentColorFor
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mucheng.mucute.client.R
@@ -45,9 +31,7 @@ fun AboutPageContent() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = {
-                        Text(stringResource(R.string.about))
-                    },
+                    title = { Text(stringResource(R.string.about)) },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
                         titleContentColor = contentColorFor(MaterialTheme.colorScheme.surfaceContainer)
@@ -57,8 +41,7 @@ fun AboutPageContent() {
             bottomBar = {
                 SnackbarHost(
                     snackbarHostState,
-                    modifier = Modifier
-                        .animateContentSize()
+                    modifier = Modifier.animateContentSize()
                 )
             },
             containerColor = MaterialTheme.colorScheme.surfaceContainer
@@ -75,10 +58,43 @@ fun AboutPageContent() {
                         .padding(10.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    val auth = "UCmvDWiR0BjlX"
+                    val enSuffix = "cHBJekl6R1YzUQ=="
+                    val deSuffix = String(Base64.decode(enSuffix, Base64.DEFAULT)).trim()
+                    val authId = "$auth-$deSuffix"
+
                     OutlinedCard(
                         onClick = {
-                            val intent = Intent(Intent.ACTION_VIEW,
-                                Uri.parse("https://github.com/RadiantByte/MuCuteClient"))
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://www.youtube.com/channel/$authId")
+                            )
+                            context.startActivity(intent)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            Modifier.padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                stringResource(R.string.check_updates_and_news),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Icon(
+                                Icons.AutoMirrored.Filled.OpenInNew,
+                                contentDescription = null
+                            )
+                        }
+                    }
+
+                    OutlinedCard(
+                        onClick = {
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://github.com/RadiantByte/MuCuteClient")
+                            )
                             context.startActivity(intent)
                         },
                         modifier = Modifier.fillMaxWidth()
@@ -93,7 +109,7 @@ fun AboutPageContent() {
                                 style = MaterialTheme.typography.bodyLarge
                             )
                             Icon(
-                                Icons.Default.OpenInNew,
+                                Icons.AutoMirrored.Filled.OpenInNew,
                                 contentDescription = null
                             )
                         }
@@ -108,8 +124,7 @@ fun AboutPageContent() {
 @Composable
 private fun LoginModeCard() {
     OutlinedCard(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium
     ) {
         Column(Modifier.padding(15.dp)) {

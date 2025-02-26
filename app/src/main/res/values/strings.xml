@@ -37,7 +37,7 @@
     <string name="about">About</string>
     <string name="settings">Settings</string>
     <string name="how_do_i_switch_login_mode">How do I switch login modes?</string>
-    <string name="login_mode_introduction">If you want to log in in online mode, add the account and select it. If you want to log in in offline mode, deselect the account.</string>
+    <string name="login_mode_introduction">If you want to log in to online mode, add an account and select it. If you want to log in to offline mode, deselect the account.</string>
     <string name="combat">Combat</string>
     <string name="motion">Motion</string>
     <string name="visual">Visual</string>
@@ -51,6 +51,7 @@
     <string name="request_ignore_battery_optimization">We need to ignore battery optimization to stay connected</string>
     <string name="ignore_battery_optimization_denied">Ignore battery optimization permission denied</string>
     <string name="shortcut">Shortcut</string>
+    <string name="check_updates_and_news">View Updates &amp; News</string>
     <string name="crash_happened">Crash Happened</string>
     <string name="cannot_back">A crash has occurred and you are not allowed to return. You can only restart the app.</string>
     <string name="effect">Effect</string>
