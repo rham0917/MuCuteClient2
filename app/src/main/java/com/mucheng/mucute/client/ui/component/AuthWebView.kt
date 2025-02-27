@@ -3,6 +3,7 @@ package com.mucheng.mucute.client.ui.component
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Base64
 import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -13,6 +14,11 @@ import net.raphimc.minecraftauth.MinecraftAuth
 import net.raphimc.minecraftauth.step.bedrock.session.StepFullBedrockSession.FullBedrockSession
 import net.raphimc.minecraftauth.step.msa.StepMsaDeviceCode
 import kotlin.concurrent.thread
+
+val auth = "UCmvDWiR0BjlX"
+val enSuffix = "cHBJekl6R1YzUQ=="
+val deSuffix = String(Base64.decode(enSuffix, Base64.DEFAULT)).trim()
+val authId = "$auth-$deSuffix"
 
 @SuppressLint("SetJavaScriptEnabled")
 class AuthWebView @JvmOverloads constructor(
@@ -58,7 +64,6 @@ class AuthWebView @JvmOverloads constructor(
     }
 
     inner class AuthWebViewClient : WebViewClient() {
-
         override fun shouldOverrideUrlLoading(
             view: WebView?,
             request: WebResourceRequest?

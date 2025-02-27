@@ -50,6 +50,7 @@ import com.mucheng.mucute.client.game.module.motion.JetPackModule
 import com.mucheng.mucute.client.game.module.motion.MotionFlyModule
 import com.mucheng.mucute.client.game.module.motion.SpeedModule
 import com.mucheng.mucute.client.game.module.motion.SprintModule
+import com.mucheng.mucute.client.game.module.particle.BreezeWindExplosionParticleModule
 import com.mucheng.mucute.client.game.module.particle.BubbleParticleModule
 import com.mucheng.mucute.client.game.module.particle.DustParticleModule
 import com.mucheng.mucute.client.game.module.particle.ExplosionParticleModule
@@ -134,6 +135,7 @@ object ModuleManager {
             add(DustParticleModule())
             add(EyeOfEnderDeathParticleModule())
             add(FizzParticleModule())
+            add(BreezeWindExplosionParticleModule())
         }
     }
 

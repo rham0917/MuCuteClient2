@@ -2,7 +2,6 @@ package com.mucheng.mucute.client.router.main
 
 import android.content.Intent
 import android.net.Uri
-import android.util.Base64
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -17,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.mucheng.mucute.client.ui.component.*
 import com.mucheng.mucute.client.R
 import com.mucheng.mucute.client.util.LocalSnackbarHostState
 import com.mucheng.mucute.client.util.SnackbarHostStateScope
@@ -58,11 +58,6 @@ fun AboutPageContent() {
                         .padding(10.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    val auth = "UCmvDWiR0BjlX"
-                    val enSuffix = "cHBJekl6R1YzUQ=="
-                    val deSuffix = String(Base64.decode(enSuffix, Base64.DEFAULT)).trim()
-                    val authId = "$auth-$deSuffix"
-
                     OutlinedCard(
                         onClick = {
                             val intent = Intent(
