@@ -72,6 +72,7 @@ object TranslationManager {
         put("dust_particle", "Dust")
         put("fizz_particle", "Fizz")
         put("ender_eye_particle", "Ender Eye")
+        put("breeze_block_explosion_particle", "Breeze")
 
         // Below for module options
         put("times", "Times")
