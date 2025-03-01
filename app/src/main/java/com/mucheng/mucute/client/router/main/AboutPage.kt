@@ -110,32 +110,6 @@ fun AboutPageContent() {
                         }
                     }
 
-                    OutlinedCard(
-                        onClick = {
-                            val intent = Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("https://t.me/mucuteteam")
-                            )
-                            context.startActivity(intent)
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row(
-                            Modifier.padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                "Join Our Telegram Group",
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            Icon(
-                                Icons.AutoMirrored.Filled.OpenInNew,
-                                contentDescription = null
-                            )
-                        }
-                    }
-
                     LoginModeCard()
                 }
             }
