@@ -73,6 +73,7 @@ object TranslationManager {
         put("fizz_particle", "Fizz")
         put("ender_eye_particle", "Ender Eye")
         put("breeze_block_explosion_particle", "Breeze")
+        put("hitandrun", "Hit & Run")
 
         // Below for module options
         put("times", "Times")
@@ -117,6 +118,10 @@ object TranslationManager {
         put("offset_radius", "Offset Radius")
         put("height_offset", "Height Offset")
         put("levels", "Levels")
+        put("threshold", "Threshold")
+        put("hit_speed", "Hit Speed")
+        put("jump_height", "Jump Height")
+        put("circle_radius", "Circle Radius")
     }
 
     private fun zh() = buildMap {

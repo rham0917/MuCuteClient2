@@ -13,13 +13,15 @@ import org.cloudburstmc.protocol.bedrock.data.AbilityLayer
 import org.cloudburstmc.protocol.bedrock.data.PlayerPermission
 import org.cloudburstmc.protocol.bedrock.data.command.CommandPermission
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket
-import org.cloudburstmc.protocol.bedrock.packet.SetEntityMotionPacket
 import org.cloudburstmc.protocol.bedrock.packet.TextPacket
+import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData
+import org.cloudburstmc.protocol.bedrock.packet.SetEntityMotionPacket
 import org.cloudburstmc.protocol.bedrock.packet.UpdateAbilitiesPacket
 
 class FreeCameraModule : Module("free_camera", ModuleCategory.Visual) {
 
     private var originalPosition: Vector3f? = null
+    private val flySpeed by floatValue("speed", 0.15f, 0.1f..1.5f) // Add configurable speed
 
     private val enableFlyNoClipPacket = UpdateAbilitiesPacket().apply {
         playerPermission = PlayerPermission.OPERATOR
@@ -74,6 +76,13 @@ class FreeCameraModule : Module("free_camera", ModuleCategory.Visual) {
     override fun onEnabled() {
         super.onEnabled()
         if (isSessionCreated) {
+            // Store original position immediately when enabled
+            originalPosition = Vector3f.from(
+                session.localPlayer.posX,
+                session.localPlayer.posY,
+                session.localPlayer.posZ
+            )
+
             GlobalScope.launch {
                 for (i in 5 downTo 1) {
                     val countdownMessage = "§l§b[MuCute] §r§7FreeCam will enable in §e$i §7seconds"
@@ -81,12 +90,6 @@ class FreeCameraModule : Module("free_camera", ModuleCategory.Visual) {
                     delay(1000)
                 }
 
-                // Store original position when enabled after countdown
-                originalPosition = Vector3f.from(
-                    session.localPlayer.posX,
-                    session.localPlayer.posY,
-                    session.localPlayer.posZ
-                )
                 enableFlyNoClipPacket.uniqueEntityId = session.localPlayer.uniqueEntityId
                 session.clientBound(enableFlyNoClipPacket)
                 isFlyNoClipEnabled = true
@@ -126,6 +129,26 @@ class FreeCameraModule : Module("free_camera", ModuleCategory.Visual) {
     override fun beforePacketBound(interceptablePacket: InterceptablePacket) {
         val packet = interceptablePacket.packet
         if (packet is PlayerAuthInputPacket && isEnabled) {
+            // Handle vertical movement
+            if (isFlyNoClipEnabled) {
+                var verticalMotion = 0f
+
+                // Space for up, Shift for down
+                if (packet.inputData.contains(PlayerAuthInputData.JUMPING)) {
+                    verticalMotion = flySpeed
+                } else if (packet.inputData.contains(PlayerAuthInputData.SNEAKING)) {
+                    verticalMotion = -flySpeed
+                }
+
+                if (verticalMotion != 0f) {
+                    val motionPacket = SetEntityMotionPacket().apply {
+                        runtimeEntityId = session.localPlayer.runtimeEntityId
+                        motion = Vector3f.from(0f, verticalMotion, 0f)
+                    }
+                    session.clientBound(motionPacket)
+                }
+            }
+
             interceptablePacket.intercept()
         }
     }

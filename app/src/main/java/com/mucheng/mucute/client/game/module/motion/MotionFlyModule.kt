@@ -15,9 +15,9 @@ import org.cloudburstmc.protocol.bedrock.packet.UpdateAbilitiesPacket
 
 class MotionFlyModule : Module("motion_fly", ModuleCategory.Motion) {
 
-    private val verticalSpeedUp by floatValue("verticalUpSpeed", 7.0f, 1.0f..20.0f)
-    private val verticalSpeedDown by floatValue("verticalDownSpeed", 7.0f, 1.0f..20.0f)
-    private val motionInterval by floatValue("delay", 100.0f, 100.0f..600.0f)
+    private val verticalSpeedUp = floatValue("verticalUpSpeed", 11.77f, 1.0f..20.0f)
+    private val verticalSpeedDown = floatValue("verticalDownSpeed", 16.55f, 1.0f..20.0f)
+    private val motionInterval = floatValue("delay", 472.17f, 100.0f..600.0f)
     private var lastMotionTime = 0L
     private var jitterState = false
     private var canFly = false
@@ -66,10 +66,10 @@ class MotionFlyModule : Module("motion_fly", ModuleCategory.Motion) {
 
         if (packet is PlayerAuthInputPacket) {
             handleFlyAbilities(isEnabled)
-            if (isEnabled && System.currentTimeMillis() - lastMotionTime >= motionInterval) {
+            if (isEnabled && System.currentTimeMillis() - lastMotionTime >= motionInterval.value) {
                 val vertical = when {
-                    packet.inputData.contains(PlayerAuthInputData.WANT_UP) -> verticalSpeedUp
-                    packet.inputData.contains(PlayerAuthInputData.WANT_DOWN) -> -verticalSpeedDown
+                    packet.inputData.contains(PlayerAuthInputData.WANT_UP) -> verticalSpeedUp.value
+                    packet.inputData.contains(PlayerAuthInputData.WANT_DOWN) -> -verticalSpeedDown.value
                     else -> 0f
                 }
                 val motionPacket = SetEntityMotionPacket().apply {
