@@ -15,9 +15,10 @@ import org.cloudburstmc.protocol.bedrock.packet.UpdateAbilitiesPacket
 
 class MotionFlyModule : Module("motion_fly", ModuleCategory.Motion) {
 
-    private val verticalSpeedUp = floatValue("verticalUpSpeed", 11.77f, 1.0f..20.0f)
-    private val verticalSpeedDown = floatValue("verticalDownSpeed", 16.55f, 1.0f..20.0f)
-    private val motionInterval = floatValue("delay", 472.17f, 100.0f..600.0f)
+    private val verticalSpeedUp = floatValue("verticalUpSpeed", 7.0f, 1.0f..20.0f)
+    private val verticalSpeedDown = floatValue("verticalDownSpeed", 7.0f, 1.0f..20.0f)
+    private val motionInterval = floatValue("delay", 100f, 10f..600f)
+    private val flySpeedValue by floatValue("speed", 1f, 0f..20f)
     private var lastMotionTime = 0L
     private var jitterState = false
     private var canFly = false
@@ -30,7 +31,7 @@ class MotionFlyModule : Module("motion_fly", ModuleCategory.Motion) {
             abilitiesSet.addAll(Ability.entries.toTypedArray())
             abilityValues.addAll(Ability.entries)
             walkSpeed = 0.1f
-            flySpeed = 2.19f
+            flySpeed = flySpeedValue
         })
     }
 
@@ -50,10 +51,13 @@ class MotionFlyModule : Module("motion_fly", ModuleCategory.Motion) {
         if (canFly != isEnabled) {
             flyAbilitiesPacket.uniqueEntityId = session.localPlayer.uniqueEntityId
             resetAbilitiesPacket.uniqueEntityId = session.localPlayer.uniqueEntityId
+            flyAbilitiesPacket.abilityLayers[0].flySpeed = flySpeedValue
             if (isEnabled) {
                 session.clientBound(flyAbilitiesPacket)
+                flyAbilitiesPacket.abilityLayers[0].flySpeed = flySpeedValue
             } else {
                 session.clientBound(resetAbilitiesPacket)
+                flyAbilitiesPacket.abilityLayers[0].flySpeed = flySpeedValue
             }
             canFly = isEnabled
         }
