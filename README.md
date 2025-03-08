@@ -16,7 +16,7 @@ LodingGlue (Modules)
 
 MrPokeG (Modules & UI)
 
-Answer2 (Modules)
+Answer2 (Functions)
 
 KATZEYEUEU (Kawaii Theme)
 
