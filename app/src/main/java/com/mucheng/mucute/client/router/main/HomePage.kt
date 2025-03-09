@@ -262,40 +262,41 @@ fun HomePageContent() {
 @Composable
 private fun BackendCard() {
     ElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.elevatedCardColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
         ),
-        onClick = {
-
-        }
+        onClick = { }
     ) {
         Column(
             modifier = Modifier.padding(15.dp),
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
-            Icon(
-                Icons.Rounded.Plumbing,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.onPrimary, CircleShape)
-                    .scale(0.8f)
-                    .size(20.dp)
-            )
-            Column(Modifier.fillMaxWidth()) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Icon(
+                    Icons.Rounded.Plumbing,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.onPrimary, CircleShape)
+                        .scale(0.8f)
+                        .size(20.dp)
+                )
                 Text(
                     stringResource(R.string.backend),
                     style = MaterialTheme.typography.bodyLarge
                 )
-                Text(
-                    stringResource(R.string.backend_introduction),
-                    style = MaterialTheme.typography.bodySmall
-                )
             }
+
+            Text(
+                stringResource(R.string.backend_introduction),
+                style = MaterialTheme.typography.bodySmall
+            )
         }
     }
 }

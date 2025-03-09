@@ -173,6 +173,7 @@ private fun ModuleCard(module: Module) {
                         is FloatValue -> FloatValueContent(it)
                         is IntValue -> IntValueContent(it)
                         is ListValue -> ChoiceValueContent(it)
+                        is EnumValue<*> -> EnumValueContent(it)
                     }
                 }
                 ShortcutContent(module)
@@ -419,6 +420,44 @@ private fun ShortcutContent(module: Module) {
                 checkmarkColor = MaterialTheme.colorScheme.primary
             )
         )
+    }
+}
+
+@Composable
+private fun <T : Enum<T>> EnumValueContent(value: EnumValue<T>) {
+    Column(
+        Modifier
+            .padding(start = 10.dp, end = 10.dp, bottom = 5.dp)
+    ) {
+        Text(
+            value.name.translatedSelf,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.surface
+        )
+        Row(
+            Modifier
+                .horizontalScroll(rememberScrollState())
+        ) {
+            value.enumClass.enumConstants?.forEach { enumValue ->
+                ElevatedFilterChip(
+                    selected = value.value == enumValue,
+                    onClick = {
+                        if (value.value != enumValue) {
+                            value.value = enumValue
+                        }
+                    },
+                    label = {
+                        Text(enumValue.name.translatedSelf)
+                    },
+                    modifier = Modifier.height(30.dp),
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.outlineVariant,
+                        selectedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                        selectedLabelColor = MaterialTheme.colorScheme.primary
+                    )
+                )
+            }
+        }
     }
 }
 
