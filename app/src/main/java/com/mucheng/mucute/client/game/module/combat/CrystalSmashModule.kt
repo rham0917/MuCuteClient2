@@ -8,10 +8,10 @@ import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket
 
 class CrystalSmashModule : Module("crystal_smash", ModuleCategory.Combat) {
 
-    private var rangeValue by floatValue("range", 4.0f, 2f..7f)
-    private var attackInterval by intValue("delay", 5, 1..20)
-    private var cpsValue by intValue("cps", 10, 1..20)
-    private var packets by intValue("packets", 1, 1..10)
+    private var rangeValue by floatValue("range", 4.0f, 0f..20f)
+    private var attackInterval by intValue("delay", 5, 1..100)
+    private var cpsValue by intValue("cps", 10, 1..1000)
+    private var packets by intValue("packets", 1, 1..100)
 
     private var lastAttackTime = 0L
 
