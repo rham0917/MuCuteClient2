@@ -21,7 +21,7 @@ object TranslationManager {
         put("levitation", "Levitation")
         put("high_jump", "High Jump")
         put("slow_falling", "Slow Falling")
-        put("anti_knockback", "Velocity")
+        put("anti_knockback", "Anti Knockback")
         put("poseidon", "Poseidon")
         put("regeneration", "Regen")
         put("bhop", "BHOP")
@@ -30,8 +30,8 @@ object TranslationManager {
         put("anti_afk", "Anti AFK")
         put("auto_walk", "Auto Walk")
         put("desync", "Desync")
-        put("position_logger", "Entity Tracer")
-        put("killaura", "Killaura")
+        put("position_logger", "Tracer")
+        put("killaura", "KillAura")
         put("motion_fly", "Motion Fly")
         put("free_camera", "Free Camera")
         put("player_tracer", "Player Tracker")
@@ -74,6 +74,9 @@ object TranslationManager {
         put("ender_eye_particle", "Ender Eye")
         put("breeze_block_explosion_particle", "Breeze")
         put("hitandrun", "Hit & Run")
+        put("hitbox", "Hitbox")
+        put("crystal_smash", "Crystal Smash")
+        put("trigger_bot", "Trigger Bot")
 
         // Below for module options
         put("times", "Times")
@@ -122,6 +125,15 @@ object TranslationManager {
         put("hit_speed", "Hit Speed")
         put("jump_height", "Jump Height")
         put("circle_radius", "Circle Radius")
+        put("include_mobs", "Include Mobs")
+        put("track_all", "Track Everyone (may cause lag)")
+        put("closest_player", "Closest Player")
+        put("track_mobs", "Track Mobs")
+        put("hitbox_size", "Hitbox Size")
+        put("particles", "Particles")
+        put("visualize", "Visualize")
+        put("size", "Size")
+        put("ylevel", "Y Level")
     }
 
     private fun zh() = buildMap {

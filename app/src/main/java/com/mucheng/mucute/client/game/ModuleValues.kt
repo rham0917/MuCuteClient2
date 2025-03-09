@@ -27,6 +27,9 @@ interface AutoConfiguration {
     fun listValue(name: String, value: ListItem, choices: Set<ListItem>) =
         ListValue(name, value, choices).also { values.add(it) }
 
+    fun <T : Enum<T>> enumValue(name: String, value: T, enumClass: Class<T>) =
+        EnumValue(name, value, enumClass).also { values.add(it) }
+
 }
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -103,6 +106,22 @@ class ListValue(name: String, defaultValue: ListItem, val listItems: Set<ListIte
         }
     }
 
+}
+
+class EnumValue<T : Enum<T>>(name: String, defaultValue: T, val enumClass: Class<T>) :
+    Value<T>(name, defaultValue) {
+
+    override fun toJson() = JsonPrimitive(value.name)
+
+    override fun fromJson(element: JsonElement) {
+        if (element is JsonPrimitive) {
+            try {
+                value = java.lang.Enum.valueOf(enumClass, element.content)
+            } catch (e: IllegalArgumentException) {
+                reset()
+            }
+        }
+    }
 }
 
 interface ListItem {

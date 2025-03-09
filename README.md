@@ -16,6 +16,8 @@ LodingGlue (Modules)
 
 MrPokeG (Modules & UI)
 
+Answer2 (Functions)
+
 KATZEYEUEU (Kawaii Theme)
 
 Hax0r (Partial ProtoHax Source Code)
