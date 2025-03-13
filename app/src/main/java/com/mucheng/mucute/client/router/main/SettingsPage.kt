@@ -54,6 +54,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Opacity
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material.icons.rounded.ViewColumn
 import androidx.core.content.edit
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,11 +64,15 @@ fun SettingsPageContent() {
         val context = LocalContext.current
         val sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
         var showOpacityDialog by remember { mutableStateOf(false) }
+        var showColumnsDialog by remember { mutableStateOf(false) }
         var overlayOpacity by remember {
             mutableStateOf(sharedPreferences.getFloat("overlay_opacity", 1f))
         }
         var shortcutOpacity by remember {
             mutableStateOf(sharedPreferences.getFloat("shortcut_opacity", 1f))
+        }
+        var columnCount by remember {
+            mutableStateOf(sharedPreferences.getInt("module_columns", 3))
         }
 
         Scaffold(
@@ -131,9 +136,47 @@ fun SettingsPageContent() {
                         )
                     }
                 }
+
+                // Module Columns Settings Card
+                OutlinedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.medium,
+                    onClick = { showColumnsDialog = true }
+                ) {
+                    Row(
+                        Modifier.padding(15.dp),
+                        horizontalArrangement = Arrangement.spacedBy(15.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Rounded.ViewColumn,
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Column(Modifier.weight(1f)) {
+                            Text(
+                                "Module Layout",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                "Adjust number of module columns (${columnCount} columns)",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                        Icon(
+                            Icons.Rounded.Settings,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier
+                                .scale(0.8f)
+                                .size(20.dp)
+                        )
+                    }
+                }
             }
         }
 
+        // Opacity Dialog
         if (showOpacityDialog) {
             BasicAlertDialog(
                 onDismissRequest = { showOpacityDialog = false },
@@ -197,6 +240,54 @@ fun SettingsPageContent() {
                                     valueRange = 0.0f..1f
                                 )
                             }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Module Columns Dialog
+        if (showColumnsDialog) {
+            BasicAlertDialog(
+                onDismissRequest = { showColumnsDialog = false },
+                modifier = Modifier.padding(vertical = 24.dp)
+            ) {
+                Surface(
+                    shape = AlertDialogDefaults.shape,
+                    tonalElevation = AlertDialogDefaults.TonalElevation
+                ) {
+                    Column(
+                        Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Text(
+                            "Module Layout Settings",
+                            modifier = Modifier.align(Alignment.Start),
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+
+                        Column {
+                            Text(
+                                "Number of Columns",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Slider(
+                                value = columnCount.toFloat(),
+                                onValueChange = { value ->
+                                    val newCount = value.toInt()
+                                    columnCount = newCount
+                                    sharedPreferences.edit {
+                                        putInt("module_columns", newCount)
+                                    }
+                                },
+                                valueRange = 1f..3f,
+                                steps = 1
+                            )
+                            Text(
+                                "${columnCount.toInt()} columns",
+                                style = MaterialTheme.typography.bodySmall
+                            )
                         }
                     }
                 }

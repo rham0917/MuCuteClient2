@@ -77,6 +77,8 @@ object TranslationManager {
         put("hitbox", "Hitbox")
         put("crystal_smash", "Crystal Smash")
         put("trigger_bot", "Trigger Bot")
+        put("speed_display", "Speed Display")
+        put("no_chat", "NoChat")
 
         // Below for module options
         put("times", "Times")
@@ -134,6 +136,16 @@ object TranslationManager {
         put("visualize", "Visualize")
         put("size", "Size")
         put("ylevel", "Y Level")
+        put("colored_text", "Colored Text")
+        put("speed_smoothing", "Speed Smoothing")
+        put("block_all", "Block All")
+        put("block_player_chat", "Block Player Chat")
+        put("block_system_chat", "Block System Chat")
+        put("block_whispers", "Block Whispers");
+        put("block_announcements", "Block Announcements")
+        put("block_join_leave", "Block Join/Leave")
+        put("height", "Height")
+        put("width", "Width")
     }
 
     private fun zh() = buildMap {

@@ -40,6 +40,7 @@ import com.mucheng.mucute.client.game.module.effect.WitherModule
 import com.mucheng.mucute.client.game.module.misc.DesyncModule
 import com.mucheng.mucute.client.game.module.misc.FakeDeathModule
 import com.mucheng.mucute.client.game.module.misc.FakeXPModule
+import com.mucheng.mucute.client.game.module.misc.NoChatModule
 import com.mucheng.mucute.client.game.module.misc.NoClipModule
 import com.mucheng.mucute.client.game.module.misc.PositionLoggerModule
 import com.mucheng.mucute.client.game.module.visual.TimeShiftModule
@@ -63,6 +64,7 @@ import com.mucheng.mucute.client.game.module.particle.FizzParticleModule
 import com.mucheng.mucute.client.game.module.particle.HeartParticleModule
 import com.mucheng.mucute.client.game.module.visual.FreeCameraModule
 import com.mucheng.mucute.client.game.module.visual.NoHurtCameraModule
+import com.mucheng.mucute.client.game.module.visual.SpeedDisplayModule
 import com.mucheng.mucute.client.game.module.visual.ZoomModule
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -144,6 +146,8 @@ object ModuleManager {
             add(HitboxModule())
             add(CrystalSmashModule())
             add(TriggerBotModule())
+            add(NoChatModule())
+            add(SpeedDisplayModule())
         }
     }
 
