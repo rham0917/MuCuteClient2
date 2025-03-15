@@ -13,7 +13,8 @@ import org.cloudburstmc.protocol.bedrock.packet.EntityEventPacket
 
 class HitboxModule : Module("hitbox", ModuleCategory.Combat) {
 
-    private val hitboxSize by floatValue("hitbox_size", 1.5f, 0.5f..12f)
+    private val hitboxWidth by floatValue("width", 1.5f, 0.5f..12f)
+    private val hitboxHeight by floatValue("height", 1.5f, 0.5f..12f)
     private var playersOnly by boolValue("players_only", true)
     private var mobsOnly by boolValue("include_mobs", false)
     private val particleCount by intValue("particles", 8, 4..16)
@@ -34,8 +35,8 @@ class HitboxModule : Module("hitbox", ModuleCategory.Combat) {
                 session.level.entityMap.values.forEach { entity ->
                     if (entity.isTarget()) {
                         val metadata = EntityDataMap()
-                        metadata.put(EntityDataTypes.WIDTH, hitboxSize)
-                        metadata.put(EntityDataTypes.HEIGHT, hitboxSize)
+                        metadata.put(EntityDataTypes.WIDTH, hitboxWidth)
+                        metadata.put(EntityDataTypes.HEIGHT, hitboxHeight)
                         metadata.put(EntityDataTypes.SCALE, 1.0f)
 
                         session.clientBound(SetEntityDataPacket().apply {
@@ -53,9 +54,28 @@ class HitboxModule : Module("hitbox", ModuleCategory.Combat) {
         }
     }
 
+    override fun onDisabled() {
+        super.onDisabled()
+        if (isSessionCreated) {
+            session.level.entityMap.values.forEach { entity ->
+                if (entity.isTarget()) {
+                    val metadata = EntityDataMap()
+                    metadata.put(EntityDataTypes.WIDTH, 0.6f)
+                    metadata.put(EntityDataTypes.HEIGHT, 1.8f)
+                    metadata.put(EntityDataTypes.SCALE, 1.0f)
+
+                    session.clientBound(SetEntityDataPacket().apply {
+                        runtimeEntityId = entity.runtimeEntityId
+                        this.metadata = metadata
+                    })
+                }
+            }
+        }
+    }
+
     private fun visualizeHitboxWithParticles(entity: Entity) {
         val pos = entity.vec3Position
-        val radius = hitboxSize / 2f
+        val radius = hitboxWidth / 2f
 
         repeat(particleCount) { i ->
             val angle = (i * (360.0 / particleCount)).toDouble()

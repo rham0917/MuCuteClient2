@@ -84,6 +84,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mucheng.mucute.client.R
 import com.mucheng.mucute.client.service.Services
 import com.mucheng.mucute.client.util.LocalSnackbarHostState
+import com.mucheng.mucute.client.util.MinecraftUtils
 import com.mucheng.mucute.client.util.SnackbarHostStateScope
 import com.mucheng.mucute.client.viewmodel.MainScreenViewModel
 import com.mucheng.mucute.relay.MuCuteRelay
@@ -368,7 +369,7 @@ private fun GameCard() {
                 Text(
                     stringResource(
                         R.string.recommended_version,
-                        MuCuteRelay.DefaultCodec.minecraftVersion
+                        MinecraftUtils.RECOMMENDED_VERSION
                     ),
                     style = MaterialTheme.typography.bodySmall
                 )
