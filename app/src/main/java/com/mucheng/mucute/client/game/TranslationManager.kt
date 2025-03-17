@@ -79,6 +79,9 @@ object TranslationManager {
         put("trigger_bot", "Trigger Bot")
         put("speed_display", "Speed Display")
         put("no_chat", "NoChat")
+        put("network_info", "NetworkInfo")
+        put("coordinates", "Coordinates")
+        put("mining_fatigue", "Mining Fatigue")
 
         // Below for module options
         put("times", "Times")
@@ -128,7 +131,7 @@ object TranslationManager {
         put("jump_height", "Jump Height")
         put("circle_radius", "Circle Radius")
         put("include_mobs", "Include Mobs")
-        put("track_all", "Track Everyone (may cause lag)")
+        put("track_all", "Track Everyone")
         put("closest_player", "Closest Player")
         put("track_mobs", "Track Mobs")
         put("hitbox_size", "Hitbox Size")
@@ -146,6 +149,9 @@ object TranslationManager {
         put("block_join_leave", "Block Join/Leave")
         put("height", "Height")
         put("width", "Width")
+        put("decimal_places", "Decimal Places")
+        put("show_direction", "Show Direction")
+        put("show_packets", "Show Packets")
     }
 
     private fun zh() = buildMap {
