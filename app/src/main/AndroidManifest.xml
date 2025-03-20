@@ -40,7 +40,8 @@
         <activity android:name=".activity.CrashHandlerActivity" />
 
         <service
-            android:name=".service.CaptureModeService"
+            android:name=".service.RelayService"
+            android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="specialUse">
 

@@ -24,6 +24,7 @@ import com.mucheng.mucute.client.game.module.effect.InstantHealthModule
 import com.mucheng.mucute.client.game.module.effect.InvisibilityModule
 import com.mucheng.mucute.client.game.module.effect.JumpBoostModule
 import com.mucheng.mucute.client.game.module.effect.LevitationModule
+import com.mucheng.mucute.client.game.module.effect.MiningFatigueModule
 import com.mucheng.mucute.client.game.module.effect.NauseaModule
 import com.mucheng.mucute.client.game.module.effect.NightVisionModule
 import com.mucheng.mucute.client.game.module.effect.PoisonModule
@@ -37,6 +38,7 @@ import com.mucheng.mucute.client.game.module.effect.SwiftnessModule
 import com.mucheng.mucute.client.game.module.effect.VillageHeroModule
 import com.mucheng.mucute.client.game.module.effect.WeaknessModule
 import com.mucheng.mucute.client.game.module.effect.WitherModule
+import com.mucheng.mucute.client.game.module.misc.CommandHandlerModule
 import com.mucheng.mucute.client.game.module.misc.DesyncModule
 import com.mucheng.mucute.client.game.module.misc.FakeDeathModule
 import com.mucheng.mucute.client.game.module.misc.FakeXPModule
@@ -63,7 +65,9 @@ import com.mucheng.mucute.client.game.module.particle.EyeOfEnderDeathParticleMod
 import com.mucheng.mucute.client.game.module.particle.FizzParticleModule
 import com.mucheng.mucute.client.game.module.particle.HeartParticleModule
 import com.mucheng.mucute.client.game.module.visual.FreeCameraModule
+import com.mucheng.mucute.client.game.module.visual.NetworkInfoModule
 import com.mucheng.mucute.client.game.module.visual.NoHurtCameraModule
+import com.mucheng.mucute.client.game.module.visual.PositionDisplayModule
 import com.mucheng.mucute.client.game.module.visual.SpeedDisplayModule
 import com.mucheng.mucute.client.game.module.visual.ZoomModule
 import kotlinx.serialization.json.Json
@@ -148,6 +152,10 @@ object ModuleManager {
             add(TriggerBotModule())
             add(NoChatModule())
             add(SpeedDisplayModule())
+            add(PositionDisplayModule())
+            add(CommandHandlerModule())
+            add(NetworkInfoModule())
+            add(MiningFatigueModule())
         }
     }
 
