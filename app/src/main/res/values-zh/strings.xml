@@ -32,6 +32,7 @@
     <string name="select">选择</string>
     <string name="unselect">取消选择</string>
     <string name="has_been_selected">（已选择）</string>
+    <string name="server">服务器</string>
     <string name="about">关于</string>
     <string name="settings">设置</string>
     <string name="how_do_i_switch_login_mode">如何切换登录模式？</string>

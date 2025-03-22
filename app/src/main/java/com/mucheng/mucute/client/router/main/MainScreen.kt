@@ -10,6 +10,7 @@ import androidx.compose.material.icons.automirrored.twotone.Help
 import androidx.compose.material.icons.twotone.AccountCircle
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Settings
+import androidx.compose.material.icons.twotone.Storage
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRailItem
@@ -43,6 +44,11 @@ enum class MainScreenPages(
         icon = { Icon(Icons.TwoTone.AccountCircle, contentDescription = null) },
         label = { Text(stringResource(R.string.account)) },
         content = { AccountPageContent() }
+    ),
+    ServerPage(
+        icon = { Icon(Icons.TwoTone.Storage, contentDescription = null) },
+        label = { Text(stringResource(R.string.server)) },
+        content = { ServerPageContent() }
     ),
     AboutPage(
         icon = { Icon(Icons.AutoMirrored.TwoTone.Help, contentDescription = null) },
