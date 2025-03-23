@@ -30,6 +30,9 @@ interface AutoConfiguration {
     fun <T : Enum<T>> enumValue(name: String, value: T, enumClass: Class<T>) =
         EnumValue(name, value, enumClass).also { values.add(it) }
 
+    fun stringValue(name: String, defaultValue: String, listOf: List<String>?) =
+        StringValue(name, defaultValue).also { values.add(it) }
+
 }
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -122,6 +125,18 @@ class EnumValue<T : Enum<T>>(name: String, defaultValue: T, val enumClass: Class
             }
         }
     }
+}
+
+class StringValue(name: String, defaultValue: String) : Value<String>(name, defaultValue) {
+
+    override fun toJson() = JsonPrimitive(value)
+
+    override fun fromJson(element: JsonElement) {
+        if (element is JsonPrimitive) {
+            value = element.content
+        }
+    }
+
 }
 
 interface ListItem {

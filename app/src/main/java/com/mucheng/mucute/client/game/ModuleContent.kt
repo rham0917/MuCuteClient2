@@ -35,6 +35,8 @@ import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
@@ -189,6 +191,7 @@ private fun ModuleCard(module: Module) {
                         is IntValue -> IntValueContent(it)
                         is ListValue -> ChoiceValueContent(it)
                         is EnumValue<*> -> EnumValueContent(it)
+                        is StringValue -> StringValueContent(it)
                     }
                 }
                 ShortcutContent(module)
@@ -473,6 +476,32 @@ private fun <T : Enum<T>> EnumValueContent(value: EnumValue<T>) {
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun StringValueContent(value: StringValue) {
+    Column(
+        Modifier
+            .padding(start = 10.dp, end = 10.dp, bottom = 5.dp)
+    ) {
+        Text(
+            value.name.translatedSelf,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.surface
+        )
+        OutlinedTextField(
+            value = value.value,
+            onValueChange = { value.value = it },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.surface,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                focusedTextColor = MaterialTheme.colorScheme.surface,
+                unfocusedTextColor = MaterialTheme.colorScheme.surface
+            )
+        )
     }
 }
 
