@@ -54,6 +54,8 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -75,6 +77,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.Lifecycle
@@ -87,8 +90,9 @@ import com.mucheng.mucute.client.util.LocalSnackbarHostState
 import com.mucheng.mucute.client.util.MinecraftUtils
 import com.mucheng.mucute.client.util.SnackbarHostStateScope
 import com.mucheng.mucute.client.viewmodel.MainScreenViewModel
-import com.mucheng.mucute.relay.MuCuteRelay
 import kotlinx.coroutines.launch
+import java.net.Inet4Address
+import java.net.NetworkInterface
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -144,6 +148,7 @@ fun HomePageContent() {
             onPostPermissionResult(true)
         }
         var isActiveBefore by rememberSaveable { mutableStateOf(Services.isActive) }
+        var showConnectionDialog by remember { mutableStateOf(false) }
         LaunchedEffect(Services.isActive) {
             if (Services.isActive == isActiveBefore) {
                 return@LaunchedEffect
@@ -151,6 +156,7 @@ fun HomePageContent() {
 
             isActiveBefore = Services.isActive
             if (Services.isActive) {
+                showConnectionDialog = true
                 snackbarHostState.currentSnackbarData?.dismiss()
                 val result = snackbarHostState.showSnackbar(
                     message = context.getString(R.string.backend_connected),
@@ -256,6 +262,63 @@ fun HomePageContent() {
                     }
                 }
             }
+        }
+        if (showConnectionDialog) {
+            val ipAddress = remember {
+                runCatching {
+                    NetworkInterface.getNetworkInterfaces().asSequence()
+                        .flatMap { it.inetAddresses.asSequence() }
+                        .filterIsInstance<Inet4Address>()
+                        .firstOrNull { !it.isLoopbackAddress }
+                        ?.hostAddress
+                }.getOrNull() ?: "127.0.0.1"
+            }
+
+            AlertDialog(
+                onDismissRequest = { showConnectionDialog = false },
+                title = {
+                    Text(
+                        "How to Connect",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                text = {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text("To join, go to Minecraft's Friends tab and join through LAN. If LAN doesn't show up, you can add a new server in the Servers tab by entering the IP address and port provided below, then press Play.")
+
+                        Text(
+                            "IP Address:",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Bold
+                            )
+                        )
+                        Text(
+                            ipAddress,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+
+                        Text(
+                            "Port:",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Bold
+                            )
+                        )
+                        Text(
+                            "19132",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = { showConnectionDialog = false }
+                    ) {
+                        Text("OK")
+                    }
+                }
+            )
         }
     }
 }

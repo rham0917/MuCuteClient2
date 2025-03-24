@@ -69,6 +69,7 @@ import com.mucheng.mucute.client.game.module.visual.NetworkInfoModule
 import com.mucheng.mucute.client.game.module.visual.NoHurtCameraModule
 import com.mucheng.mucute.client.game.module.visual.PositionDisplayModule
 import com.mucheng.mucute.client.game.module.visual.SpeedDisplayModule
+import com.mucheng.mucute.client.game.module.visual.WorldStateModule
 import com.mucheng.mucute.client.game.module.visual.ZoomModule
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -156,6 +157,7 @@ object ModuleManager {
             add(CommandHandlerModule())
             add(NetworkInfoModule())
             add(MiningFatigueModule())
+            add(WorldStateModule())
         }
     }
 

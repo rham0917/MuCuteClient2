@@ -82,6 +82,7 @@ object TranslationManager {
         put("network_info", "NetworkInfo")
         put("coordinates", "Coordinates")
         put("mining_fatigue", "Mining Fatigue")
+        put("world_state", "World State")
 
         // Below for module options
         put("times", "Times")
@@ -152,6 +153,13 @@ object TranslationManager {
         put("decimal_places", "Decimal Places")
         put("show_direction", "Show Direction")
         put("show_packets", "Show Packets")
+        put("show_entities", "Show Entities")
+        put("show_players", "Show Players")
+        put("show_time", "Show Time")
+        put("show_chunks", "Show Chunks")
+        put("colored_text", "Colored Text")
+        put("update_interval", "Update Interval")
+
     }
 
     private fun zh() = buildMap {
