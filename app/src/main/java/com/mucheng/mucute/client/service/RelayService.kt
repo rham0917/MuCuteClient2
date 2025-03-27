@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
+import android.os.PowerManager
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.mucheng.mucute.client.application.AppContext
@@ -24,11 +25,21 @@ class RelayService : Service() {
         var isActive = false
     }
 
+    private lateinit var wakeLock: PowerManager.WakeLock
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
+
+        // Acquire wake lock
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        wakeLock = powerManager.newWakeLock(
+            PowerManager.PARTIAL_WAKE_LOCK,
+            "MuCuteRelay::RelayServiceWakeLock"
+        )
+        wakeLock.acquire()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -39,6 +50,9 @@ class RelayService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        if (wakeLock.isHeld) {
+            wakeLock.release()
+        }
         stopRelay()
     }
 

@@ -8,7 +8,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.ExperimentalFoundationApi
 import com.mucheng.mucute.client.navigation.Navigation
 import com.mucheng.mucute.client.ui.theme.MuCuteClientTheme
-
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.PowerManager
+import android.provider.Settings
+import androidx.core.net.toUri
 
 class MainActivity : ComponentActivity() {
 
@@ -17,6 +22,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        checkBatteryOptimizations()
         setContent {
             MuCuteClientTheme {
                 Navigation()
@@ -24,4 +30,15 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @SuppressLint("BatteryLife")
+    private fun checkBatteryOptimizations() {
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
+            val intent = Intent().apply {
+                action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                data = "package:$packageName".toUri()
+            }
+            startActivity(intent)
+        }
+    }
 }
