@@ -78,7 +78,7 @@ class RelayService : Service() {
 
             val gameSettingsSharedPreferences =
                 AppContext.instance.getSharedPreferences("game_settings", Context.MODE_PRIVATE)
-          GameSettingsModel.from(gameSettingsSharedPreferences)
+            GameSettingsModel.from(gameSettingsSharedPreferences)
 
             ModuleManager.loadConfig()
 

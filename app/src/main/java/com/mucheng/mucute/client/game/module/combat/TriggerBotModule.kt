@@ -4,6 +4,7 @@ import com.mucheng.mucute.client.game.InterceptablePacket
 import com.mucheng.mucute.client.game.Module
 import com.mucheng.mucute.client.game.ModuleCategory
 import com.mucheng.mucute.client.game.entity.*
+import org.cloudburstmc.math.vector.Vector3f
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket
 
 class TriggerBotModule : Module("trigger_bot", ModuleCategory.Combat) {
@@ -39,25 +40,38 @@ class TriggerBotModule : Module("trigger_bot", ModuleCategory.Combat) {
 
     private fun isLookingAt(entity: Entity): Boolean {
         val playerPos = session.localPlayer.vec3Position
-        val targetPos = entity.vec3Position
-        val playerRot = session.localPlayer.vec3Rotation
+        val entityPos = entity.vec3Position
 
-        val dx = targetPos.x.toDouble() - playerPos.x.toDouble()
-        val dy = targetPos.y.toDouble() - playerPos.y.toDouble()
-        val dz = targetPos.z.toDouble() - playerPos.z.toDouble()
-        val distance = Math.sqrt(dx * dx + dy * dy + dz * dz)
+        val bodyPoints = arrayOf(
+            Vector3f.from(entityPos.x, entityPos.y, entityPos.z),
+            Vector3f.from(entityPos.x, entityPos.y + 0.9f, entityPos.z),
+            Vector3f.from(entityPos.x, entityPos.y + 1.8f, entityPos.z)
+        )
 
-        val yawRad = Math.toRadians(playerRot.y.toDouble() + 90.0)
-        val pitchRad = Math.toRadians(-playerRot.x.toDouble())
+        for (targetPos in bodyPoints) {
+            val dx = targetPos.x.toDouble() - playerPos.x.toDouble()
+            val dy = targetPos.y.toDouble() - playerPos.y.toDouble()
+            val dz = targetPos.z.toDouble() - playerPos.z.toDouble()
 
-        val lookX = Math.cos(pitchRad) * Math.cos(yawRad)
-        val lookY = Math.sin(pitchRad)
-        val lookZ = Math.cos(pitchRad) * Math.sin(yawRad)
+            val distance = Math.sqrt(dx * dx + dy * dy + dz * dz)
 
-        val dot = (dx * lookX + dy * lookY + dz * lookZ) / distance
-        val angle = Math.toDegrees(Math.acos(dot))
+            val playerRot = session.localPlayer.vec3Rotation
+            val yawRad = Math.toRadians(playerRot.y.toDouble() + 90.0)
+            val pitchRad = Math.toRadians(-playerRot.x.toDouble())
 
-        return angle <= 10.0
+            val lookX = Math.cos(pitchRad) * Math.cos(yawRad)
+            val lookY = Math.sin(pitchRad)
+            val lookZ = Math.cos(pitchRad) * Math.sin(yawRad)
+
+            val dot = (dx * lookX + dy * lookY + dz * lookZ) / distance
+            val angle = Math.toDegrees(Math.acos(dot))
+
+            if (angle <= 20.0) {
+                return true
+            }
+        }
+
+        return false
     }
 
     private fun Entity.isTarget(): Boolean {

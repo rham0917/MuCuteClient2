@@ -109,29 +109,25 @@ class OverlayClickGUI : OverlayWindow() {
                         }
                     }
                     VerticalDivider()
-                    AnimatedContent(
-                        targetState = selectedModuleCategory,
-                        label = "animatedPage",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.surfaceContainer)
-                    ) { moduleCategory ->
-                        Box(Modifier.fillMaxSize()) {
-                            if (moduleCategory == ModuleCategory.Config) {
-                                ConfigCategoryContent()
-                                return@Box
-                            }
-                            ModuleContent(moduleCategory)
-                        }
-                    }
+                    DialogContent()
                 }
             }
         }
     }
 
     @Composable
-    private fun ConfigCategoryContent() {
-
+    private fun DialogContent() {
+        AnimatedContent(
+            targetState = selectedModuleCategory,
+            label = "animatedPage",
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surfaceContainer)
+        ) { moduleCategory ->
+            Box(Modifier.fillMaxSize()) {
+                ModuleContent(moduleCategory)
+            }
+        }
     }
 
 }

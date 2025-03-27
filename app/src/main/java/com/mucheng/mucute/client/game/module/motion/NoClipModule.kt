@@ -1,4 +1,4 @@
-package com.mucheng.mucute.client.game.module.misc
+package com.mucheng.mucute.client.game.module.motion
 
 import com.mucheng.mucute.client.game.InterceptablePacket
 import com.mucheng.mucute.client.game.Module
@@ -14,8 +14,7 @@ import org.cloudburstmc.math.vector.Vector3f
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData
 import org.cloudburstmc.protocol.bedrock.packet.SetEntityMotionPacket
 
-class NoClipModule : Module("no_clip", ModuleCategory.Misc) {
-    // Add speed control value
+class NoClipModule : Module("no_clip", ModuleCategory.Motion) {
     private var moveSpeed by floatValue("speed", 0.15f, 0.1f..1.5f)
 
     private val enableNoClipAbilitiesPacket = UpdateAbilitiesPacket().apply {
@@ -84,7 +83,6 @@ class NoClipModule : Module("no_clip", ModuleCategory.Misc) {
         }
 
         if (packet is PlayerAuthInputPacket) {
-            // Enable/disable noclip abilities
             if (!noClipEnabled && isEnabled) {
                 enableNoClipAbilitiesPacket.uniqueEntityId = session.localPlayer.uniqueEntityId
                 session.clientBound(enableNoClipAbilitiesPacket)
@@ -96,7 +94,6 @@ class NoClipModule : Module("no_clip", ModuleCategory.Misc) {
                 return
             }
 
-            // Add vertical movement handling when enabled
             if (isEnabled) {
                 var verticalMotion = 0f
 

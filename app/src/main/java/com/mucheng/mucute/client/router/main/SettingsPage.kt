@@ -50,29 +50,49 @@ import com.mucheng.mucute.client.util.SnackbarHostStateScope
 import com.mucheng.mucute.client.overlay.OverlayManager
 
 import android.content.Context
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Opacity
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material.icons.rounded.ViewColumn
+import androidx.compose.material.icons.rounded.SaveAlt
+import androidx.compose.material.icons.rounded.Upload
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.core.content.edit
+import com.mucheng.mucute.client.game.ModuleManager
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsPageContent() {
     SnackbarHostStateScope {
         val context = LocalContext.current
-        val sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val snackbarHostState = LocalSnackbarHostState.current
+        val coroutineScope = rememberCoroutineScope()
+
         var showOpacityDialog by remember { mutableStateOf(false) }
         var showColumnsDialog by remember { mutableStateOf(false) }
+
+        val sharedPreferences = remember {
+            context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        }
+
+        var columnCount by remember {
+            mutableStateOf(sharedPreferences.getInt("module_columns", 2))
+        }
+
         var overlayOpacity by remember {
             mutableStateOf(sharedPreferences.getFloat("overlay_opacity", 1f))
         }
         var shortcutOpacity by remember {
             mutableStateOf(sharedPreferences.getFloat("shortcut_opacity", 1f))
-        }
-        var columnCount by remember {
-            mutableStateOf(sharedPreferences.getInt("module_columns", 3))
         }
 
         Scaffold(
@@ -171,6 +191,152 @@ fun SettingsPageContent() {
                                 .scale(0.8f)
                                 .size(20.dp)
                         )
+                    }
+                }
+
+                var showFileNameDialog by remember { mutableStateOf(false) }
+                var configFileName by remember { mutableStateOf("") }
+                val filePickerLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.GetContent()
+                ) { uri ->
+                    uri?.let {
+                        if (ModuleManager.importConfigFromFile(context, it)) {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar("Config imported successfully")
+                            }
+                        } else {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar("Failed to import config")
+                            }
+                        }
+                    }
+                }
+
+                OutlinedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Column(
+                        modifier = Modifier.padding(15.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(15.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                Icons.Rounded.SaveAlt,
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Column(Modifier.weight(1f)) {
+                                Text(
+                                    "Config Management",
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                                Text(
+                                    "Save and load module configurations",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
+
+                        FilledTonalButton(
+                            onClick = { filePickerLauncher.launch("application/json") },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(
+                                Icons.Rounded.Upload,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text("Import Config")
+                        }
+
+                        FilledTonalButton(
+                            onClick = { showFileNameDialog = true },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(
+                                Icons.Rounded.SaveAlt,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text("Export Config")
+                        }
+                    }
+                }
+
+                if (showFileNameDialog) {
+                    BasicAlertDialog(
+                        onDismissRequest = {
+                            showFileNameDialog = false
+                            configFileName = ""
+                        },
+                        modifier = Modifier.padding(24.dp)
+                    ) {
+                        Surface(
+                            shape = AlertDialogDefaults.shape,
+                            tonalElevation = AlertDialogDefaults.TonalElevation
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(24.dp),
+                                verticalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                Text(
+                                    "Save Configuration",
+                                    style = MaterialTheme.typography.headlineSmall
+                                )
+
+                                OutlinedTextField(
+                                    value = configFileName,
+                                    onValueChange = { configFileName = it },
+                                    label = { Text("Configuration Name") },
+                                    singleLine = true,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    supportingText = { Text("The config will be saved as '$configFileName.json'") }
+                                )
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    TextButton(
+                                        onClick = {
+                                            showFileNameDialog = false
+                                            configFileName = ""
+                                        }
+                                    ) {
+                                        Text("Cancel")
+                                    }
+                                    Spacer(Modifier.width(8.dp))
+                                    FilledTonalButton(
+                                        onClick = {
+                                            if (configFileName.isNotBlank()) {
+                                                if (ModuleManager.exportConfigToFile(context, configFileName)) {
+                                                    coroutineScope.launch {
+                                                        snackbarHostState.showSnackbar("Configuration saved successfully")
+                                                    }
+                                                } else {
+                                                    coroutineScope.launch {
+                                                        snackbarHostState.showSnackbar("Failed to save configuration")
+                                                    }
+                                                }
+                                            }
+                                            showFileNameDialog = false
+                                            configFileName = ""
+                                        },
+                                        enabled = configFileName.isNotBlank()
+                                    ) {
+                                        Text("Save")
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

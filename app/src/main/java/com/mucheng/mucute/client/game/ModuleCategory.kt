@@ -32,10 +32,5 @@ enum class ModuleCategory(
     Misc(
         iconResId = R.drawable.toc_24px,
         labelResId = R.string.misc
-    ),
-    Config(
-        iconResId = R.drawable.manufacturing_24px,
-        labelResId = R.string.config
     )
-
 }

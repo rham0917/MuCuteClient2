@@ -28,7 +28,18 @@ class MotionFlyModule : Module("motion_fly", ModuleCategory.Motion) {
         abilityLayers.add(AbilityLayer().apply {
             layerType = AbilityLayer.Type.BASE
             abilitiesSet.addAll(Ability.entries.toTypedArray())
-            abilityValues.addAll(Ability.entries)
+            abilityValues.addAll(arrayOf(
+                Ability.BUILD,
+                Ability.MINE,
+                Ability.DOORS_AND_SWITCHES,
+                Ability.OPEN_CONTAINERS,
+                Ability.ATTACK_PLAYERS,
+                Ability.ATTACK_MOBS,
+                Ability.MAY_FLY,
+                Ability.FLY_SPEED,
+                Ability.WALK_SPEED,
+                Ability.OPERATOR_COMMANDS
+            ))
             walkSpeed = 0.1f
             flySpeed = 2.19f
         })
@@ -40,7 +51,15 @@ class MotionFlyModule : Module("motion_fly", ModuleCategory.Motion) {
         abilityLayers.add(AbilityLayer().apply {
             layerType = AbilityLayer.Type.BASE
             abilitiesSet.addAll(Ability.entries.toTypedArray())
-            abilityValues.removeAll { it == Ability.MAY_FLY || it == Ability.NO_CLIP }
+            abilityValues.addAll(arrayOf(
+                Ability.BUILD,
+                Ability.MINE,
+                Ability.DOORS_AND_SWITCHES,
+                Ability.OPEN_CONTAINERS,
+                Ability.ATTACK_PLAYERS,
+                Ability.ATTACK_MOBS,
+                Ability.OPERATOR_COMMANDS
+            ))
             walkSpeed = 0.1f
             flySpeed = 0f
         })
@@ -60,9 +79,7 @@ class MotionFlyModule : Module("motion_fly", ModuleCategory.Motion) {
     }
 
     override fun beforePacketBound(interceptablePacket: InterceptablePacket) {
-
         val packet = interceptablePacket.packet
-
 
         if (packet is PlayerAuthInputPacket) {
             handleFlyAbilities(isEnabled)
@@ -81,6 +98,5 @@ class MotionFlyModule : Module("motion_fly", ModuleCategory.Motion) {
                 lastMotionTime = System.currentTimeMillis()
             }
         }
-
     }
 }

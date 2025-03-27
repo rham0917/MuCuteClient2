@@ -1,6 +1,8 @@
 package com.mucheng.mucute.client.game
 
 
+import android.content.Context
+import android.net.Uri
 import com.mucheng.mucute.client.application.AppContext
 import com.mucheng.mucute.client.game.module.combat.AntiCrystalModule
 import com.mucheng.mucute.client.game.module.combat.AntiKnockbackModule
@@ -43,7 +45,7 @@ import com.mucheng.mucute.client.game.module.misc.DesyncModule
 import com.mucheng.mucute.client.game.module.misc.FakeDeathModule
 import com.mucheng.mucute.client.game.module.misc.FakeXPModule
 import com.mucheng.mucute.client.game.module.misc.NoChatModule
-import com.mucheng.mucute.client.game.module.misc.NoClipModule
+import com.mucheng.mucute.client.game.module.motion.NoClipModule
 import com.mucheng.mucute.client.game.module.misc.PositionLoggerModule
 import com.mucheng.mucute.client.game.module.visual.TimeShiftModule
 import com.mucheng.mucute.client.game.module.visual.WeatherControllerModule
@@ -75,6 +77,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
+import java.io.File
 
 object ModuleManager {
 
@@ -200,6 +203,64 @@ object ModuleManager {
             (modules[module.name] as? JsonObject)?.let {
                 module.fromJson(it)
             }
+        }
+    }
+
+    fun exportConfig(): String {
+        val jsonObject = buildJsonObject {
+            put("modules", buildJsonObject {
+                _modules.forEach {
+                    if (it.private) {
+                        return@forEach
+                    }
+                    put(it.name, it.toJson())
+                }
+            })
+        }
+        return json.encodeToString(jsonObject)
+    }
+
+    fun importConfig(configStr: String) {
+        try {
+            val jsonObject = json.parseToJsonElement(configStr).jsonObject
+            val modules = jsonObject["modules"]?.jsonObject ?: return
+
+            _modules.forEach { module ->
+                modules[module.name]?.let {
+                    if (it is JsonObject) {
+                        module.fromJson(it)
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Invalid config format")
+        }
+    }
+
+    fun exportConfigToFile(context: Context, fileName: String): Boolean {
+        return try {
+            val configsDir = context.getExternalFilesDir("configs")
+            configsDir?.mkdirs()
+
+            val configFile = File(configsDir, "$fileName.json")
+            configFile.writeText(exportConfig())
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    fun importConfigFromFile(context: Context, uri: Uri): Boolean {
+        return try {
+            context.contentResolver.openInputStream(uri)?.use { input ->
+                val configStr = input.bufferedReader().readText()
+                importConfig(configStr)
+            }
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
         }
     }
 
