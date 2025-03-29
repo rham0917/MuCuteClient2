@@ -6,9 +6,11 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
+import android.provider.Settings
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.mucheng.mucute.client.application.AppContext
@@ -31,15 +33,37 @@ class RelayService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        startForegroundImmediate()
         createNotificationChannel()
 
-        // Acquire wake lock
-        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
-        wakeLock = powerManager.newWakeLock(
-            PowerManager.PARTIAL_WAKE_LOCK,
-            "MuCuteRelay::RelayServiceWakeLock"
-        )
-        wakeLock.acquire()
+        wakeLock = (getSystemService(POWER_SERVICE) as PowerManager).run {
+            newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MuCute::RelayLock").apply {
+                acquire()
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val pm = getSystemService(POWER_SERVICE) as PowerManager
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                startActivity(Intent().apply {
+                    action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                    data = Uri.parse("package:$packageName")
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                })
+            }
+        }
+    }
+
+    private fun startForegroundImmediate() {
+        val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setContentTitle("MuCute Relay")
+            .setContentText("Relay service is running")
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .build()
+
+        startForeground(NOTIFICATION_ID, notification)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -50,7 +74,7 @@ class RelayService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (wakeLock.isHeld) {
+        if (::wakeLock.isInitialized && wakeLock.isHeld) {
             wakeLock.release()
         }
         stopRelay()
