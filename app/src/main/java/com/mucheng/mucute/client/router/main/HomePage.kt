@@ -1,9 +1,11 @@
 package com.mucheng.mucute.client.router.main
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.provider.OpenableColumns
 import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -18,6 +20,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,16 +33,19 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.rounded.AddPhotoAlternate
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Plumbing
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -79,6 +85,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
@@ -91,6 +98,7 @@ import com.mucheng.mucute.client.util.MinecraftUtils
 import com.mucheng.mucute.client.util.SnackbarHostStateScope
 import com.mucheng.mucute.client.viewmodel.MainScreenViewModel
 import kotlinx.coroutines.launch
+import java.io.File
 import java.net.Inet4Address
 import java.net.NetworkInterface
 
@@ -217,6 +225,7 @@ fun HomePageContent() {
                     BackendCard()
                     IntroductionCard()
                     GameCard()
+                    TexturePackCard()
                 }
                 FloatingActionButton(
                     onClick = {
@@ -687,5 +696,115 @@ private fun GameCard() {
                 }
             }
         )
+    }
+}
+
+@Composable
+private fun TexturePackCard() {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    val filePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let { selectedUri ->
+            try {
+                val fileName = context.contentResolver.query(selectedUri, null, null, null, null)?.use { cursor ->
+                    val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    cursor.moveToFirst()
+                    cursor.getString(nameIndex)
+                } ?: return@let
+
+                if (!fileName.endsWith(".mcpack") &&
+                    !fileName.endsWith(".mcaddon") &&
+                    !fileName.endsWith(".mcworld")) {
+                    Toast.makeText(context, "Invalid file type. Only .mcpack, .mcaddon and .mcworld files are supported", Toast.LENGTH_LONG).show()
+                    return@let
+                }
+
+                val tempFile = File(context.cacheDir, fileName)
+                context.contentResolver.openInputStream(selectedUri)?.use { input ->
+                    tempFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+
+                val fileUri = FileProvider.getUriForFile(
+                    context,
+                    "${context.packageName}.provider",
+                    tempFile
+                )
+
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    setDataAndType(fileUri, when {
+                        fileName.endsWith(".mcworld") -> "application/x-world"
+                        fileName.endsWith(".mcpack") -> "application/x-minecraft-resourcepack"
+                        fileName.endsWith(".mcaddon") -> "application/x-minecraft-addon"
+                        else -> "application/octet-stream"
+                    })
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    `package` = "com.mojang.minecraftpe"
+                }
+
+                try {
+                    context.startActivity(intent)
+                    Toast.makeText(context, "Data pack sent to Minecraft!", Toast.LENGTH_SHORT).show()
+                } catch (e: ActivityNotFoundException) {
+                    Toast.makeText(context,
+                        "Failed to open Minecraft. Error: ${e.message}",
+                        Toast.LENGTH_LONG).show()
+                }
+
+            } catch (e: Exception) {
+                Toast.makeText(context, "Failed to import data pack: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    OutlinedCard(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Column(
+            modifier = Modifier.padding(15.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(15.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Rounded.AddPhotoAlternate,
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp)
+                )
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        "Minecraft Data Packs",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        "Import texture packs, skins, add-ons and worlds",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
+
+            FilledTonalButton(
+                onClick = {
+                    filePickerLauncher.launch("*/*")
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    Icons.Rounded.Upload,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text("Import Data Packs")
+            }
+        }
     }
 }

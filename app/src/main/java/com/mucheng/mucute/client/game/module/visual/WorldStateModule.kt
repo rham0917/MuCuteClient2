@@ -4,9 +4,8 @@ import android.annotation.SuppressLint
 import com.mucheng.mucute.client.game.InterceptablePacket
 import com.mucheng.mucute.client.game.Module
 import com.mucheng.mucute.client.game.ModuleCategory
-import org.cloudburstmc.protocol.bedrock.packet.SetTitlePacket
-import org.cloudburstmc.protocol.bedrock.packet.UpdateBlockPacket
-import org.cloudburstmc.protocol.bedrock.packet.SetTimePacket
+import com.mucheng.mucute.client.game.ActionBarManager
+import org.cloudburstmc.protocol.bedrock.packet.*
 
 class WorldStateModule : Module("world_state", ModuleCategory.Visual) {
 
@@ -64,15 +63,8 @@ class WorldStateModule : Module("world_state", ModuleCategory.Visual) {
                 }
             }
 
-            session.clientBound(SetTitlePacket().apply {
-                type = SetTitlePacket.Type.ACTIONBAR
-                this.text = text
-                fadeInTime = 0
-                fadeOutTime = 0
-                stayTime = 2
-                xuid = ""
-                platformOnlineId = ""
-            })
+            ActionBarManager.updateModule("worldstate", text)
+            ActionBarManager.display(session)
         }
     }
 
@@ -92,15 +84,8 @@ class WorldStateModule : Module("world_state", ModuleCategory.Visual) {
     override fun onDisabled() {
         super.onDisabled()
         if (isSessionCreated) {
-            session.clientBound(SetTitlePacket().apply {
-                type = SetTitlePacket.Type.ACTIONBAR
-                text = ""
-                fadeInTime = 0
-                fadeOutTime = 0
-                stayTime = 0
-                xuid = ""
-                platformOnlineId = ""
-            })
+            ActionBarManager.removeModule("worldstate")
+            ActionBarManager.display(session)
         }
     }
 }

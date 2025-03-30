@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import com.mucheng.mucute.client.game.InterceptablePacket
 import com.mucheng.mucute.client.game.Module
 import com.mucheng.mucute.client.game.ModuleCategory
+import com.mucheng.mucute.client.game.ActionBarManager
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket
-import org.cloudburstmc.protocol.bedrock.packet.SetTitlePacket
 import kotlin.math.sqrt
 
 class SpeedDisplayModule : Module("speed_display", ModuleCategory.Visual) {
@@ -13,10 +13,8 @@ class SpeedDisplayModule : Module("speed_display", ModuleCategory.Visual) {
     private var lastDisplayTime = 0L
     private val displayInterval = 500L
     private val colorStyle by boolValue("colored_text", true)
-
-
-    private val speedHistory = ArrayDeque<Double>(5)
     private val smoothingEnabled by boolValue("speed_smoothing", true)
+    private val speedHistory = ArrayDeque<Double>(5)
 
     @SuppressLint("DefaultLocale")
     override fun beforePacketBound(interceptablePacket: InterceptablePacket) {
@@ -55,16 +53,18 @@ class SpeedDisplayModule : Module("speed_display", ModuleCategory.Visual) {
                     "Speed: ${String.format("%.2f", smoothedSpeed)} bps"
                 }
 
-                session.clientBound(SetTitlePacket().apply {
-                    type = SetTitlePacket.Type.ACTIONBAR
-                    text = speedText
-                    fadeInTime = 0
-                    fadeOutTime = 0
-                    stayTime = 2
-                    xuid = ""
-                    platformOnlineId = ""
-                })
+                ActionBarManager.updateModule("speed", speedText)
+                ActionBarManager.display(session)
             }
+        }
+    }
+
+    override fun onDisabled() {
+        super.onDisabled()
+        if (isSessionCreated) {
+            ActionBarManager.removeModule("speed")
+            ActionBarManager.display(session)
+            speedHistory.clear()
         }
     }
 }

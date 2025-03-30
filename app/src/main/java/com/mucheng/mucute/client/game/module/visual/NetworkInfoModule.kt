@@ -3,8 +3,8 @@ package com.mucheng.mucute.client.game.module.visual
 import com.mucheng.mucute.client.game.InterceptablePacket
 import com.mucheng.mucute.client.game.Module
 import com.mucheng.mucute.client.game.ModuleCategory
+import com.mucheng.mucute.client.game.ActionBarManager
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket
-import org.cloudburstmc.protocol.bedrock.packet.SetTitlePacket
 import org.cloudburstmc.protocol.bedrock.packet.BedrockPacket
 
 class NetworkInfoModule : Module("network_info", ModuleCategory.Visual) {
@@ -62,15 +62,8 @@ class NetworkInfoModule : Module("network_info", ModuleCategory.Visual) {
                     }
                 }
 
-                session.clientBound(SetTitlePacket().apply {
-                    type = SetTitlePacket.Type.ACTIONBAR
-                    text = networkText
-                    fadeInTime = 0
-                    fadeOutTime = 0
-                    stayTime = 2
-                    xuid = ""
-                    platformOnlineId = ""
-                })
+                ActionBarManager.updateModule("network", networkText)
+                ActionBarManager.display(session)
             }
         }
     }
@@ -80,5 +73,13 @@ class NetworkInfoModule : Module("network_info", ModuleCategory.Visual) {
 
         outgoingPackets++
         lastPingSentTime = System.currentTimeMillis()
+    }
+
+    override fun onDisabled() {
+        super.onDisabled()
+        if (isSessionCreated) {
+            ActionBarManager.removeModule("network")
+            ActionBarManager.display(session)
+        }
     }
 }

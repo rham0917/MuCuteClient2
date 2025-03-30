@@ -3,9 +3,9 @@ package com.mucheng.mucute.client.game.module.visual
 import com.mucheng.mucute.client.game.InterceptablePacket
 import com.mucheng.mucute.client.game.Module
 import com.mucheng.mucute.client.game.ModuleCategory
+import com.mucheng.mucute.client.game.ActionBarManager
 import org.cloudburstmc.math.vector.Vector3f
 import org.cloudburstmc.protocol.bedrock.packet.PlayerAuthInputPacket
-import org.cloudburstmc.protocol.bedrock.packet.SetTitlePacket
 
 class PositionDisplayModule : Module("coordinates", ModuleCategory.Visual) {
 
@@ -58,16 +58,17 @@ class PositionDisplayModule : Module("coordinates", ModuleCategory.Visual) {
                     }
                 }
 
-                session.clientBound(SetTitlePacket().apply {
-                    type = SetTitlePacket.Type.ACTIONBAR
-                    text = posText
-                    fadeInTime = 0
-                    fadeOutTime = 0
-                    stayTime = 2
-                    xuid = ""
-                    platformOnlineId = ""
-                })
+                ActionBarManager.updateModule("position", posText)
+                ActionBarManager.display(session)
             }
+        }
+    }
+
+    override fun onDisabled() {
+        super.onDisabled()
+        if (isSessionCreated) {
+            ActionBarManager.removeModule("position")
+            ActionBarManager.display(session)
         }
     }
 }

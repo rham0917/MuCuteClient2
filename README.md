@@ -16,6 +16,9 @@ LodingGlue (Modules)
 
 MrPokeG (Modules & UI)
 
+lyssadev (Partial TXPacker Logic)
+https://github.com/lyssadev
+
 Answer2 (Functions)
 
 KATZEYEUEU (Kawaii Theme)
