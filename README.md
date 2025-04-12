@@ -68,7 +68,6 @@ Whether it's code, bug reports, suggestions, or documentation—every bit helps 
 
 MuCuteClient is not affiliated with Mojang Studios, Microsoft, or any official Minecraft development team.
 
-Use MuCuteClient at your **Own Risk**.  
-We are **not responsible** for any bans, penalties, or issues that may result from using this client.
+Use MuCuteClient at your **Own Risk**. We are **not responsible** for any bans, penalties, or issues that may result from using this client.
 
 **Always follow server rules and respect community standards.**
