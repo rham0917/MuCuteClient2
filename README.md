@@ -6,6 +6,8 @@
 
 **MuCuteClient** is an open-source utility client made for **Minecraft Bedrock Edition**. It uses a **MITM (Man-in-the-Middle)** approach to provide powerful gameplay enhancements—**without modifying the game’s memory or requiring root access.**
 
+Relay: https://github.com/RadiantByte/MuCuteRelay
+
 ---
 
 ## 🔧 Features
