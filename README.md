@@ -31,20 +31,21 @@ Relay: https://github.com/RadiantByte/MuCuteRelay
 
 ---
 
-## 📄 License
+## License
 
-MuCuteClient is licensed under the **GNU General Public License v3.0**.
+MuCuteClient is licensed under the **GNU General Public License v3.0 (GPLv3)**.
 
 ### ✅ Permitted Uses
 
 - Personal use and modification.  
-- Creating content (e.g., videos or showcases) using MuCuteClient.
+- Creating content (e.g., videos or showcases) using MuCuteClient.  
+- Redistributing the original or modified source code, provided you include the same GPLv3 license and make the source code available.
 
 ### ❌ Prohibited Uses
 
-- Redistributing or selling modified versions.  
-- Using the MuCuteClient name or logo to imply official affiliation.  
-- Claiming ownership of the project or its source code.
+- Distributing modified versions **without** including source code and the GPLv3 license.  
+- Using the MuCuteClient name or logo in a way that implies official affiliation or endorsement.  
+- Claiming ownership of the project or its original source code.
 
 ---
 
