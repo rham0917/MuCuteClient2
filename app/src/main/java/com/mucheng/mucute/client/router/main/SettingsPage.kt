@@ -50,6 +50,10 @@ import com.mucheng.mucute.client.util.SnackbarHostStateScope
 import com.mucheng.mucute.client.overlay.OverlayManager
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import java.io.File
+import java.io.FileOutputStream
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Spacer
@@ -57,10 +61,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Opacity
 import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material.icons.rounded.ViewColumn
 import androidx.compose.material.icons.rounded.SaveAlt
 import androidx.compose.material.icons.rounded.Upload
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextButton
@@ -93,6 +98,38 @@ fun SettingsPageContent() {
         }
         var shortcutOpacity by remember {
             mutableStateOf(sharedPreferences.getFloat("shortcut_opacity", 1f))
+        }
+
+        val iconPickerLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent()
+        ) { uri ->
+            uri?.let { selectedUri ->
+                try {
+                    context.contentResolver.openInputStream(selectedUri)?.use { input ->
+                        val options = BitmapFactory.Options().apply {
+                            inScaled = false // Prevents automatic scaling
+                        }
+                        val bitmap = BitmapFactory.decodeStream(input, null, options)
+                        // Save bitmap to app's internal storage
+                        val iconFile = File(context.filesDir, "custom_overlay_icon.png")
+                        if (bitmap != null) {
+                            FileOutputStream(iconFile).use { out ->
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                            }
+                        }
+                        // Save the path in SharedPreferences
+                        sharedPreferences.edit {
+                            putString("overlay_icon_path", iconFile.absolutePath)
+                        }
+                        // Notify overlay to update icon
+                        OverlayManager.updateOverlayIcon()
+                    }
+                } catch (e: Exception) {
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar("Failed to set custom icon")
+                    }
+                }
+            }
         }
 
         Scaffold(
@@ -191,6 +228,35 @@ fun SettingsPageContent() {
                                 .scale(0.8f)
                                 .size(20.dp)
                         )
+                    }
+                }
+
+                // Overlay Icon Settings Card
+                OutlinedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.medium,
+                    onClick = { iconPickerLauncher.launch("image/*") }
+                ) {
+                    Row(
+                        Modifier.padding(15.dp),
+                        horizontalArrangement = Arrangement.spacedBy(15.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Rounded.Image,
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Column(Modifier.weight(1f)) {
+                            Text(
+                                stringResource(R.string.overlay_icon),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                stringResource(R.string.overlay_icon_description),
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
                     }
                 }
 
