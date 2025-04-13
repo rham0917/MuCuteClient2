@@ -149,4 +149,13 @@ object OverlayManager {
         }
     }
 
+    fun updateOverlayBorder() {
+        overlayWindows.find { it is OverlayButton }?.let { button ->
+            currentContext?.let { context ->
+                (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+                    .updateViewLayout(button.composeView, button.layoutParams)
+            }
+        }
+    }
+
 }

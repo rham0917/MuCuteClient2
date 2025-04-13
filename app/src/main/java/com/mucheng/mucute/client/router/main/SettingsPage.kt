@@ -73,6 +73,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.core.content.edit
 import com.mucheng.mucute.client.game.ModuleManager
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.shape.CircleShape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,11 +92,17 @@ fun SettingsPageContent() {
         val snackbarHostState = LocalSnackbarHostState.current
         val coroutineScope = rememberCoroutineScope()
 
-        var showOpacityDialog by remember { mutableStateOf(false) }
-        var showColumnsDialog by remember { mutableStateOf(false) }
-
         val sharedPreferences = remember {
             context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        }
+
+        var showOpacityDialog by remember { mutableStateOf(false) }
+        var showColumnsDialog by remember { mutableStateOf(false) }
+        var showColorPickerDialog by remember { mutableStateOf(false) }
+        var selectedBorderColor by remember {
+            mutableStateOf(
+                Color(sharedPreferences.getInt("overlay_border_color", Color.Cyan.toArgb()))
+            )
         }
 
         var columnCount by remember {
@@ -254,6 +270,35 @@ fun SettingsPageContent() {
                             )
                             Text(
                                 stringResource(R.string.overlay_icon_description),
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+                }
+
+                // Overlay Border Color Settings Card
+                OutlinedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.medium,
+                    onClick = { showColorPickerDialog = true }
+                ) {
+                    Row(
+                        Modifier.padding(15.dp),
+                        horizontalArrangement = Arrangement.spacedBy(15.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .background(selectedBorderColor, CircleShape)
+                        )
+                        Column(Modifier.weight(1f)) {
+                            Text(
+                                stringResource(R.string.overlay_border_color),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                stringResource(R.string.overlay_border_color_description),
                                 style = MaterialTheme.typography.bodySmall
                             )
                         }
@@ -520,6 +565,67 @@ fun SettingsPageContent() {
                                 "${columnCount.toInt()} columns",
                                 style = MaterialTheme.typography.bodySmall
                             )
+                        }
+                    }
+                }
+            }
+        }
+
+        // Overlay Border Color Dialog
+        if (showColorPickerDialog) {
+            BasicAlertDialog(
+                onDismissRequest = { showColorPickerDialog = false },
+                modifier = Modifier.padding(vertical = 24.dp)
+            ) {
+                Surface(
+                    shape = AlertDialogDefaults.shape,
+                    tonalElevation = AlertDialogDefaults.TonalElevation
+                ) {
+                    Column(
+                        Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Text(
+                            stringResource(R.string.overlay_border_color),
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+
+                        // Predefined color options
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(5),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            val colors = listOf(
+                                Color.Cyan, Color.Red, Color.Green, Color.Blue,
+                                Color.Yellow, Color.Magenta, Color.White,
+                                Color.Gray, Color.DarkGray, Color.LightGray
+                            )
+
+                            items(colors.size) { index ->
+                                Box(
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .background(colors[index], CircleShape)
+                                        .border(
+                                            width = if (selectedBorderColor == colors[index]) 2.dp else 1.dp,
+                                            color = if (selectedBorderColor == colors[index])
+                                                MaterialTheme.colorScheme.primary
+                                            else
+                                                Color.Gray,
+                                            shape = CircleShape
+                                        )
+                                        .clickable {
+                                            selectedBorderColor = colors[index]
+                                            sharedPreferences.edit {
+                                                putInt("overlay_border_color", colors[index].toArgb())
+                                            }
+                                            OverlayManager.updateOverlayBorder()
+                                            showColorPickerDialog = false
+                                        }
+                                )
+                            }
                         }
                     }
                 }

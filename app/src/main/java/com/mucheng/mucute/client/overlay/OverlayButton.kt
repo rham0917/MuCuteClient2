@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.toArgb
 import java.io.File
 import kotlin.math.min
 
@@ -82,6 +83,11 @@ class OverlayButton : OverlayWindow() {
             Icons.Rounded.Construction
         }
 
+        val borderColor = Color(
+            context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+                .getInt("overlay_border_color", Color.Cyan.toArgb())
+        )
+
         ElevatedCard(
             onClick = {
                 OverlayManager.showOverlayWindow(overlayClickGUI)
@@ -91,7 +97,7 @@ class OverlayButton : OverlayWindow() {
                 .size(48.dp)
                 .border(
                     width = 1.dp,
-                    color = Color.Cyan,
+                    color = borderColor,
                     shape = RectangleShape
                 )
                 .pointerInput(Unit) {
