@@ -14,10 +14,10 @@ import kotlin.math.sin
 
 class HitAndRunModule : Module("hitandrun", ModuleCategory.Combat) {
 
-    private var range by floatValue("range", 4.0f, 2f..6f)
-    private var hitSpeed by intValue("hit_speed", 200, 100..1000)
-    private var jumpHeight by floatValue("jump_height", 0.42f, 0.1f..1f)
-    private var circleRadius by floatValue("circle_radius", 1.5f, 0.5f..3f)
+    private var range by floatValue("range", 4.0f, 0f..25f)
+    private var hitSpeed by intValue("hit_speed", 200, 0..1000)
+    private var jumpHeight by floatValue("jump_height", 0.42f, 0f..10f)
+    private var circleRadius by floatValue("circle_radius", 1.5f, 0f..25f)
     private var playersOnly by boolValue("players_only", true)
 
     private var lastHitTime = 0L
