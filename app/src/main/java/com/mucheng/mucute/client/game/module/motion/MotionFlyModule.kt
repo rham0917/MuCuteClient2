@@ -15,9 +15,10 @@ import org.cloudburstmc.protocol.bedrock.packet.UpdateAbilitiesPacket
 
 class MotionFlyModule : Module("motion_fly", ModuleCategory.Motion) {
 
-    private val verticalSpeedUp = floatValue("verticalUpSpeed", 11.77f, 1.0f..20.0f)
-    private val verticalSpeedDown = floatValue("verticalDownSpeed", 16.55f, 1.0f..20.0f)
-    private val motionInterval = floatValue("delay", 472.17f, 100.0f..600.0f)
+    private val verticalSpeedUp by floatValue("verticalUpSpeed", 7.0f, 1.0f..20.0f)
+    private val verticalSpeedDown by floatValue("verticalDownSpeed", 7.0f, 1.0f..20.0f)
+    private val motionInterval by floatValue("delay", 100f, 10f..600f)
+    private val flySpeedValue by floatValue("speed", 1f, 0f..25f)
     private var lastMotionTime = 0L
     private var jitterState = false
     private var canFly = false
@@ -28,20 +29,9 @@ class MotionFlyModule : Module("motion_fly", ModuleCategory.Motion) {
         abilityLayers.add(AbilityLayer().apply {
             layerType = AbilityLayer.Type.BASE
             abilitiesSet.addAll(Ability.entries.toTypedArray())
-            abilityValues.addAll(arrayOf(
-                Ability.BUILD,
-                Ability.MINE,
-                Ability.DOORS_AND_SWITCHES,
-                Ability.OPEN_CONTAINERS,
-                Ability.ATTACK_PLAYERS,
-                Ability.ATTACK_MOBS,
-                Ability.MAY_FLY,
-                Ability.FLY_SPEED,
-                Ability.WALK_SPEED,
-                Ability.OPERATOR_COMMANDS
-            ))
+            abilityValues.addAll(Ability.entries)
             walkSpeed = 0.1f
-            flySpeed = 2.19f
+            flySpeed = flySpeedValue
         })
     }
 
@@ -51,15 +41,7 @@ class MotionFlyModule : Module("motion_fly", ModuleCategory.Motion) {
         abilityLayers.add(AbilityLayer().apply {
             layerType = AbilityLayer.Type.BASE
             abilitiesSet.addAll(Ability.entries.toTypedArray())
-            abilityValues.addAll(arrayOf(
-                Ability.BUILD,
-                Ability.MINE,
-                Ability.DOORS_AND_SWITCHES,
-                Ability.OPEN_CONTAINERS,
-                Ability.ATTACK_PLAYERS,
-                Ability.ATTACK_MOBS,
-                Ability.OPERATOR_COMMANDS
-            ))
+            abilityValues.removeAll { it == Ability.MAY_FLY || it == Ability.NO_CLIP }
             walkSpeed = 0.1f
             flySpeed = 0f
         })
@@ -69,24 +51,29 @@ class MotionFlyModule : Module("motion_fly", ModuleCategory.Motion) {
         if (canFly != isEnabled) {
             flyAbilitiesPacket.uniqueEntityId = session.localPlayer.uniqueEntityId
             resetAbilitiesPacket.uniqueEntityId = session.localPlayer.uniqueEntityId
+            flyAbilitiesPacket.abilityLayers[0].flySpeed = flySpeedValue
             if (isEnabled) {
                 session.clientBound(flyAbilitiesPacket)
+                flyAbilitiesPacket.abilityLayers[0].flySpeed = flySpeedValue
             } else {
                 session.clientBound(resetAbilitiesPacket)
+                flyAbilitiesPacket.abilityLayers[0].flySpeed = flySpeedValue
             }
             canFly = isEnabled
         }
     }
 
     override fun beforePacketBound(interceptablePacket: InterceptablePacket) {
+
         val packet = interceptablePacket.packet
+
 
         if (packet is PlayerAuthInputPacket) {
             handleFlyAbilities(isEnabled)
-            if (isEnabled && System.currentTimeMillis() - lastMotionTime >= motionInterval.value) {
+            if (isEnabled && System.currentTimeMillis() - lastMotionTime >= motionInterval) {
                 val vertical = when {
-                    packet.inputData.contains(PlayerAuthInputData.WANT_UP) -> verticalSpeedUp.value
-                    packet.inputData.contains(PlayerAuthInputData.WANT_DOWN) -> -verticalSpeedDown.value
+                    packet.inputData.contains(PlayerAuthInputData.WANT_UP) -> verticalSpeedUp
+                    packet.inputData.contains(PlayerAuthInputData.WANT_DOWN) -> -verticalSpeedDown
                     else -> 0f
                 }
                 val motionPacket = SetEntityMotionPacket().apply {
@@ -98,5 +85,6 @@ class MotionFlyModule : Module("motion_fly", ModuleCategory.Motion) {
                 lastMotionTime = System.currentTimeMillis()
             }
         }
+
     }
 }
